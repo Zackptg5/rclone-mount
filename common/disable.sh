@@ -13,7 +13,7 @@ HOME=/mnt
 CLOUDROOTMOUNTPOINT=$HOME/cloud/
 mkdir -p $CLOUDROOTMOUNTPOINT
 
-$MODDIR/rclone listremotes --config ${CONFIGFILE}|cut -f1 -d: |
+rclone listremotes --config ${CONFIGFILE}|cut -f1 -d: |
         while read line; do
                 echo "UNmounting... $line"
                 umount -f ${CLOUDROOTMOUNTPOINT}/${line}

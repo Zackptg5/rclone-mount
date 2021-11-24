@@ -9,21 +9,7 @@ MODDIR=${0%/*}
 
 #. $MODDIR/module.prop >> /dev/null 2>&1
 
-IMGDIR=/sbin/.core/img
 id=com.piyushgarg.rclone
-
-if [ -d $IMGDIR/$id ]; then
-
-    ln -sf $IMGDIR/$id/rclone /sbin/rclone
-    ln -sf $IMGDIR/$id/fusermount /sbin/fusermount
-    ln -sf $IMGDIR/$id/rclone-mount /sbin/rclone-mount
-else
-
-    ln -sf $MODDIR/rclone /sbin/rclone
-    ln -sf $MODDIR/fusermount /sbin/fusermount
-    ln -sf $MODDIR/rclone-mount /sbin/rclone-mount
-    
-fi
 
 #MODULE VARS
 USER_CONFDIR=/sdcard/.rclone
@@ -145,13 +131,13 @@ fi
 
 sleep 10
 
-/sbin/rclone listremotes --config ${CONFIGFILE}|cut -f1 -d: |
+rclone listremotes --config ${CONFIGFILE}|cut -f1 -d: |
         while read line; do
                 remote=$line
                 custom_params
                 echo "mounting... $remote"
                 mkdir -p ${CLOUDROOTMOUNTPOINT}/${line}
-                /sbin/rclone mount ${remote}: ${CLOUDROOTMOUNTPOINT}/${remote} --config ${CONFIGFILE} --max-read-ahead ${READAHEAD} --buffer-size ${BUFFERSIZE} --dir-cache-time ${DIRCACHETIME} --poll-interval 5m --attr-timeout ${DIRCACHETIME} --vfs-cache-mode ${CACHEMODE} --vfs-read-chunk-size 2M --vfs-read-chunk-size-limit 10M --vfs-cache-max-age 10h0m0s --vfs-cache-max-size ${CACHEMAXSIZE} --cache-dir=${CACHE} --cache-chunk-path ${CACHE_BACKEND} --cache-chunk-clean-interval 10m0s --log-file ${LOGFILE} --allow-other --gid 1015 --daemon
+                rclone mount ${remote}: ${CLOUDROOTMOUNTPOINT}/${remote} --config ${CONFIGFILE} --max-read-ahead ${READAHEAD} --buffer-size ${BUFFERSIZE} --dir-cache-time ${DIRCACHETIME} --poll-interval 5m --attr-timeout ${DIRCACHETIME} --vfs-cache-mode ${CACHEMODE} --vfs-read-chunk-size 2M --vfs-read-chunk-size-limit 10M --vfs-cache-max-age 10h0m0s --vfs-cache-max-size ${CACHEMAXSIZE} --cache-dir=${CACHE} --cache-chunk-path ${CACHE_BACKEND} --cache-chunk-clean-interval 10m0s --log-file ${LOGFILE} --allow-other --gid 1015 --daemon
                 sleep 5
         done
 echo

@@ -22,7 +22,7 @@
 # Set to true if you do *NOT* want Magisk to mount
 # any files for you. Most modules would NOT want
 # to set this flag to true
-SKIPMOUNT=true
+SKIPMOUNT=false
 
 # Set to true if you need to load system.prop
 PROPFILE=false
@@ -152,13 +152,14 @@ on_install() {
 
   ui_print "* Detected arch: $ARCH"
   ui_print "+ Extracting package contents..."
+  mkdir -p $MODPATH/system/bin
+  ui_print "+ Extracting rclone-$ARCH"
+  unzip -p "$ZIPFILE" binary/rclone-${ARCH} > $MODPATH/system/bin/rclone
+  ui_print "+ Extracting fusermount-$ARCH"
+  unzip -p "$ZIPFILE" binary/fusermount-${ARCH} > $MODPATH/system/bin/fusermount
+  ui_print "+ Extracting rclone-mount script"
+  unzip -p "$ZIPFILE" binary/rclone-mount > $MODPATH/system/bin/rclone-mount
 
-  ui_print "+ Extracting rclone-$ARCH to $MODPATH/rclone"
-  unzip -p "$ZIPFILE" binary/rclone-${ARCH} > $MODPATH/rclone
-  ui_print "+ Extracting fusermount-$ARCH to $MODPATH/fusermount"
-  unzip -p "$ZIPFILE" binary/fusermount-${ARCH} > $MODPATH/fusermount
-  ui_print "+ Extracting rclone-mount script to $MODPATH/rclone-mount"
-  unzip -p "$ZIPFILE" binary/rclone-mount > $MODPATH/rclone-mount
 }
 
 # Only some special files require specific permissions
@@ -169,9 +170,7 @@ on_install() {
 set_permissions() {
   # The following is the default rule, DO NOT remove
   set_perm_recursive $MODPATH 0 0 0755 0644
-  set_perm $MODPATH/rclone 0 0 0755
-  set_perm $MODPATH/fusermount 0 0 0755
-  set_perm $MODPATH/rclone-mount 0 0 0755
+  set_perm_recursive $MODPATH/system/bin 0 0 0755 0755
   set_perm $MODPATH/service.sh 0 0 0500
   # Here are some examples:
   # set_perm_recursive  $MODPATH/system/lib       0     0       0755      0644
