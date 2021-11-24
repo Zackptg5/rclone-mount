@@ -13,3 +13,7 @@
 * Move user rclone.conf & related to /sdcard/.rclone/
 * Control global --vfs-cache-mode via simple files placed in /sdcard/.rclone/
 * Specify custom params for individual remotes via /sdcard/.rclone/.REMOTENAME.params
+
+## v1.4
+* Update rclone to v1.57.0
+* Fix paths
